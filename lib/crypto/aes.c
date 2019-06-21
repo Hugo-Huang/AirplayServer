@@ -37,7 +37,9 @@
 #include <string.h>
 #include "os_port.h"
 #include "crypto.h"
-
+#if defined(_WIN32)
+#include <winsock2.h>
+#endif
 /* all commented out in skeleton mode */
 #ifndef CONFIG_SSL_SKELETON_MODE
 

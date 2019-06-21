@@ -198,7 +198,9 @@ raop_rtp_mirror_thread_time(void *arg)
 
 #ifdef _WIN32
             MUTEX_LOCK(raop_rtp_mirror->time_mutex);
-            WaitForSingleObject(&raop_rtp_mirror->time_cond, 3000);
+            //modified by huanggang 20190617
+            WaitForSingleObject(raop_rtp_mirror->time_cond, 3000);
+            //end modify
             MUTEX_UNLOCK(raop_rtp_mirror->time_mutex);
 #else
             struct timeval now;
@@ -476,6 +478,14 @@ raop_rtp_mirror_thread(void *arg)
             }
             memset(packet, 0 , 128);
             readstart = 0;
+            //added by huanggang 20190617
+            MUTEX_LOCK(raop_rtp_mirror->run_mutex);
+            if (!raop_rtp_mirror->running) {
+                MUTEX_UNLOCK(raop_rtp_mirror->run_mutex);
+                break;
+            }
+            MUTEX_UNLOCK(raop_rtp_mirror->run_mutex);
+            //end add
         }
     }
 

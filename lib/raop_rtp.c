@@ -539,7 +539,9 @@ raop_rtp_thread_udp(void *arg)
                 /* Decode all frames in queue */
                 while ((audiobuf = raop_buffer_dequeue(raop_rtp->buffer, &audiobuflen, &timestamp, no_resend))) {
                     pcm_data_struct pcm_data;
-                    pcm_data.data_len = 960;
+                    //modified by huanggang 20190617
+                    pcm_data.data_len = audiobuflen;//960;
+                    //end modify
                     pcm_data.data = audiobuf;
                     /* 根据sync_time和sync_timestamp计算timestamp对应的pts */
                     pcm_data.pts = (uint64_t) (timestamp - raop_rtp->sync_timestamp) * 1000000 / 44100 + raop_rtp->sync_time;

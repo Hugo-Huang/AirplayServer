@@ -330,7 +330,15 @@ httpd_thread(void *arg)
 				} else {
 					logger_log(httpd->logger, LOGGER_INFO, "Didn't get response");
 				}
-				http_response_destroy(response);
+                http_response_destroy(response);
+                //added by huanggang 20190617
+                MUTEX_LOCK(httpd->run_mutex);
+                if (!httpd->running) {
+                    MUTEX_UNLOCK(httpd->run_mutex);
+                    break;
+                }
+                MUTEX_UNLOCK(httpd->run_mutex);
+                //end add
 			} else {
 				logger_log(httpd->logger, LOGGER_DEBUG, "Request not complete, waiting for more data...");
 			}

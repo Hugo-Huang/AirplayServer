@@ -19,7 +19,7 @@
 #endif
 #include <string.h>
 #include "dnssd.h"
-#include "../log.h"
+#include "log.h"
 #include "utils.h"
 #include "dnssdint.h"
 #include "global.h"
