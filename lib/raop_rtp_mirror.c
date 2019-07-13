@@ -350,6 +350,9 @@ raop_rtp_mirror_thread(void *arg)
 #endif
                     /* 解密数据 */
                     mirror_buffer_decrypt(raop_rtp_mirror->buffer, payload_in, payload, payloadsize);
+		    //added by huanggang 20190713 fix memory leak
+		    free(payload_in);
+		    //end add
                     int nalu_size = 0;
                     int nalu_num = 0;
                     while (nalu_size < payloadsize) {
@@ -377,7 +380,9 @@ raop_rtp_mirror_thread(void *arg)
                     h264_data.frame_type = payload[4] & 0x1f;
                     h264_data.pts = pts;
                     raop_rtp_mirror->callbacks.video_process(raop_rtp_mirror->callbacks.cls, &h264_data);
-                    free(payload_in);
+		    //modified by huanggang 20190713 fix memory leak
+                    free(payload);
+		    //end modify
                 } else if ((payloadtype & 255) == 1) {
                     float width_source = byteutils_get_float(packet, 40);
                     float height_source = byteutils_get_float(packet, 44);
@@ -473,6 +478,9 @@ raop_rtp_mirror_thread(void *arg)
                             ret = recv(stream_fd, payload_in + readstart, payloadsize - readstart, 0);
                             readstart = readstart + ret;
                         } while (readstart < payloadsize);
+			//added by huanggang 20190713 fix memory leak
+			free(payload_in);
+			//end add
                     }
                 }
             }
